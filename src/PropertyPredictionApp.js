@@ -31,6 +31,14 @@ const PropertyPredictionApp = () => {
   const [area, setArea] = useState('');
   const [prediction, setPrediction] = useState(null);
   const [charts, setCharts] = useState(null);
+  const [error, setError] = useState(null); 
+
+  // Validate if the postcode is a valid NSW postcode
+  const isValidPostcode = (code) => {
+    const numericCode = parseInt(code, 10);
+    return !isNaN(numericCode) && numericCode >= 2000 && numericCode <= 2999;
+  };
+
 
   const generateMockData = () => {
     const years = ['2018', '2019', '2020', '2021', '2022', '2023'];
@@ -52,6 +60,19 @@ const PropertyPredictionApp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError(null); // Reset previous errors
+
+    // Validate correct inputs
+    if (!isValidPostcode(postCode)) {
+      setError('Invalid postcode. Please enter a valid NSW postcode (2xxx).');
+      return;
+    }
+
+    if (!area || isNaN(area) || parseFloat(area) <= 0) {
+      setError('Invalid area. Please enter a positive number for area.');
+      return;
+    }
+    
     const mockData = generateMockData();
     
     // Generate mock prediction
@@ -178,6 +199,9 @@ const PropertyPredictionApp = () => {
           Predict Price
         </button>
       </form>
+
+      {/* Error message div */}
+      {error && <div className="error-message">{error}</div>}
       
       {prediction && (
         <div className="prediction-results">
@@ -192,6 +216,7 @@ const PropertyPredictionApp = () => {
           </p>
         </div>
       )}
+
 
       {charts && (
         <div className="charts-container">
@@ -218,5 +243,6 @@ const PropertyPredictionApp = () => {
     </div>
   );
 };
+
 
 export default PropertyPredictionApp;
