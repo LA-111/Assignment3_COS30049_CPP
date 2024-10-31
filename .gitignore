@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/src/Assignment2_prediction_model/*
+!/src/Assignment2_prediction_model/prediction_model_test.py
