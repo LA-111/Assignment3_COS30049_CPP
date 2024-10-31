@@ -24,4 +24,4 @@ yarn-error.log*
 
 /src/Assignment2_prediction_model/*
 !/src/Assignment2_prediction_model/prediction_model_test.py
-/src/__pycache__
+/src/__pycache__/*

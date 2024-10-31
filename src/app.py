@@ -1,7 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from Assignment2_prediction_model.prediction_model_test import predict  # Import the prediction wrapper function
+from Assignment2_prediction_model.prediction_model_test import (
+    predict,
+    get_price_trend_data,
+    get_price_comparison_data,
+    get_size_vs_price_data
+)  # Import the prediction wrapper function
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -34,3 +39,28 @@ async def predict_endpoint(data: PropertyInput):
         raise HTTPException(status_code=400, detail=error)
 
     return result
+
+# Endpoint 1: Property Price Trend (Line Chart)
+@app.get("/property_price_trend")
+async def property_price_trend():
+    trend_data = get_price_trend_data()
+    if trend_data is None:
+        raise HTTPException(status_code=500, detail="Error retrieving trend data.")
+    return {"trend_data": trend_data}
+
+# Endpoint 2: Price Comparison (Bar Chart)
+@app.get("/price_comparison")
+async def price_comparison():
+    comparison_data = get_price_comparison_data()
+    if comparison_data is None:
+        raise HTTPException(status_code=500, detail="Error retrieving comparison data.")
+    return {"comparison_data": comparison_data}
+
+# Endpoint 3: Property Size vs. Price (Scatter Chart)
+@app.get("/size_vs_price/{post_code}")
+async def size_vs_price(post_code: int):
+    size_price_data = get_size_vs_price_data(post_code)
+    if size_price_data is None:
+        raise HTTPException(status_code=404, detail="No data found for the given postcode.")
+    return {"size_price_data": size_price_data}
+

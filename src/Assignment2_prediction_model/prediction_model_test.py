@@ -4,18 +4,32 @@ from datetime import datetime  # Already imported for handling the current year
 import joblib
 from sklearn.preprocessing import StandardScaler  # Assuming you're using it to scale input data
 from sklearn.ensemble import RandomForestRegressor  # Assuming you're using Random Forest models
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-merged_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\merged_df.joblib')
-house_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\house_df.joblib')
-unit_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\unit_df.joblib')
+app = FastAPI()
 
-rf_house = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\rf_house_model.joblib')
-rf_unit = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\rf_unit_model.joblib')
-classification_scaler = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\classification_scaler_house.joblib')
+# Allow CORS for frontend access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-best_rf_model_house = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\house_price_model.joblib')
-best_rf_model_unit = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\unit_price_model.joblib')
-scaler = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\scaler.joblib')
+merged_df = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\merged_df.joblib')
+house_df = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\house_df.joblib')
+unit_df = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\unit_df.joblib')
+
+rf_house = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\rf_house_model.joblib')
+rf_unit = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\rf_unit_model.joblib')
+classification_scaler = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\classification_scaler_house.joblib')
+
+best_rf_model_house = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\house_price_model.joblib')
+best_rf_model_unit = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\unit_price_model.joblib')
+scaler = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\scaler.joblib')
+
 
 def classify_and_get_rent(property_type, size_category_encoded, council_name_encoded):
     
@@ -361,3 +375,53 @@ def main(scaler, best_rf_model_house, best_rf_model_unit):
         print(f"\nPredicted price for the {property_type}: ${predicted_price:,.2f}")
 
 #main(scaler, best_rf_model_house, best_rf_model_unit)
+
+# Data functions for charts
+def get_price_trend_data():
+    try:
+        # Ensure contract_date is parsed as datetime
+        merged_df['year_month'] = pd.to_datetime(merged_df['contract_date']).dt.to_period('M')
+
+        # Calculate average price trend for houses
+        house_trend = (
+            merged_df[merged_df['property_type'] == 'house']
+            .groupby('year_month')['purchase_price']
+            .mean()
+            .reset_index()
+        )
+
+        # Calculate average price trend for units
+        unit_trend = (
+            merged_df[merged_df['property_type'] == 'unit']
+            .groupby('year_month')['purchase_price']
+            .mean()
+            .reset_index()
+        )
+
+        # Convert periods to strings for JSON serialization
+        house_trend['year_month'] = house_trend['year_month'].astype(str)
+        unit_trend['year_month'] = unit_trend['year_month'].astype(str)
+
+        return {
+            "house_trend": house_trend.to_dict(orient="records"),
+            "unit_trend": unit_trend.to_dict(orient="records")
+        }
+    except Exception as e:
+        print(f"Error in get_price_trend_data: {e}")
+        return None
+
+def get_price_comparison_data():
+    try:
+        comparison_data = merged_df.groupby('property_type')['purchase_price'].mean().reset_index()
+        return comparison_data.to_dict(orient="records")
+    except Exception as e:
+        print(f"Error in get_price_comparison_data: {e}")
+        return None
+
+def get_size_vs_price_data(post_code):
+    try:
+        size_price_data = merged_df[merged_df['post_code'] == post_code][['area', 'purchase_price']]
+        return size_price_data.to_dict(orient="records")
+    except Exception as e:
+        print(f"Error in get_size_vs_price_data for postcode {post_code}: {e}")
+        return None
