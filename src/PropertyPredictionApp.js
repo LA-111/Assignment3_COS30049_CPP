@@ -58,72 +58,53 @@ const PropertyPredictionApp = () => {
     return { years, prices, clusters, averagePrices };
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Reset previous errors
-
-    // Validate correct inputs
+    setError(null);
+  
+    // Validate inputs
     if (!isValidPostcode(postCode)) {
       setError('Invalid postcode. Please enter a valid NSW postcode (2xxx).');
       return;
     }
-
     if (!area || isNaN(area) || parseFloat(area) <= 0) {
       setError('Invalid area. Please enter a positive number for area.');
       return;
     }
-    
-    const mockData = generateMockData();
-    
-    // Generate mock prediction
-    setPrediction({
-      price: mockData.averagePrices['Your Property'],
-      weeklyRent: Math.floor(Math.random() * 1000) + 500,
-    });
-
-    // Generate chart data
-    setCharts({
-      lineChart: {
-        labels: mockData.years,
-        datasets: [
-          {
-            label: 'Property Price Trend',
-            data: mockData.prices,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1,
-          },
-        ],
-      },
-      scatterChart: {
-        datasets: [
-          {
-            label: 'Rental Clusters',
-            data: mockData.clusters,
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-          },
-          {
-            label: 'Your Property',
-            data: [{ x: 5, y: 5 }],
-            backgroundColor: 'red',
-          },
-        ],
-      },
-      barChart: {
-        labels: Object.keys(mockData.averagePrices),
-        datasets: [
-          {
-            label: 'Price Comparison',
-            data: Object.values(mockData.averagePrices),
-            backgroundColor: [
-              'rgba(75, 192, 192, 0.6)',
-              'rgba(153, 102, 255, 0.6)',
-              'rgba(255, 159, 64, 0.6)',
-            ],
-          },
-        ],
-      },
-    });
+  
+    // Prepare the request payload
+    const payload = {
+      propertyType: propertyType,
+      postCode: parseInt(postCode),
+      area: parseFloat(area),
+    };
+  
+    try {
+      const response = await fetch('http://127.0.0.1:8000/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch prediction.');
+      }
+  
+      const data = await response.json();
+  
+      // Set prediction and charts with API response
+      setPrediction({
+        price: data.predicted_price,
+        weeklyRent: data.predicted_rent,
+      });
+  
+    } catch (error) {
+      setError(error.message);
+    }
   };
+  
 
   const chartOptions = {
     responsive: true,
