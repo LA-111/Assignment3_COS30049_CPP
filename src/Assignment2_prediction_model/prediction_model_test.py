@@ -5,17 +5,17 @@ import joblib
 from sklearn.preprocessing import StandardScaler  # Assuming you're using it to scale input data
 from sklearn.ensemble import RandomForestRegressor  # Assuming you're using Random Forest models
 
-merged_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\merged_df.joblib')
-house_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\house_df.joblib')
-unit_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\unit_df.joblib')
+merged_df = joblib.load(r'C:\Users\lucas.SNB-M7N0CV16832\Documents\joblibs\merged_df.joblib')
+house_df = joblib.load(r'C:\Users\lucas.SNB-M7N0CV16832\Documents\joblibs\house_df.joblib')
+unit_df = joblib.load(r'C:\Users\lucas.SNB-M7N0CV16832\Documents\joblibs\unit_df.joblib')
 
-rf_house = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\rf_house_model.joblib')
-rf_unit = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\rf_unit_model.joblib')
-classification_scaler = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\classification_scaler_house.joblib')
+rf_house = joblib.load(r'C:\Users\lucas.SNB-M7N0CV16832\Documents\joblibs\rf_house_model.joblib')
+rf_unit = joblib.load(r'C:\Users\lucas.SNB-M7N0CV16832\Documents\joblibs\rf_unit_model.joblib')
+classification_scaler = joblib.load(r'C:\Users\lucas.SNB-M7N0CV16832\Documents\joblibs\classification_scaler_house.joblib')
 
-best_rf_model_house = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\house_price_model.joblib')
-best_rf_model_unit = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\unit_price_model.joblib')
-scaler = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\scaler.joblib')
+best_rf_model_house = joblib.load(r'C:\Users\lucas.SNB-M7N0CV16832\Documents\joblibs\house_price_model.joblib')
+best_rf_model_unit = joblib.load(r'C:\Users\lucas.SNB-M7N0CV16832\Documents\joblibs\unit_price_model.joblib')
+scaler = joblib.load(r'C:\Users\lucas.SNB-M7N0CV16832\Documents\joblibs\scaler.joblib')
 
 def classify_and_get_rent(property_type, size_category_encoded, council_name_encoded):
     

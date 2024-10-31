@@ -5,26 +5,16 @@ import { Clock, ChevronRight } from 'lucide-react';
 const HistoryPage = () => {
   const navigate = useNavigate();
 
-  // Mock history data - in a real app, this would come from your backend
-  const historyItems = [
-    {
-      id: '1',
-      date: 'October 31, 2024',
-      propertyType: 'House',
-      postCode: '2000',
-      predictedPrice: 850000
-    },
-    {
-      id: '2',
-      date: 'October 30, 2024',
-      propertyType: 'Unit',
-      postCode: '2010',
-      predictedPrice: 650000
-    }
-  ];
+  const [historyItems, setHistoryItems] = React.useState([]);
 
-  const handleItemClick = (id) => {
-    navigate(`/prediction/${id}`);
+  React.useEffect(() => {
+    const history = JSON.parse(localStorage.getItem('predictionsHistory')) || [];
+    const sortedHistory = history.sort((a, b) => b.id - a.id);
+    setHistoryItems(sortedHistory);
+  }, []);
+
+  const handleItemClick = (item) => {
+    navigate(`/prediction/${item.id}`, { state: { prediction: item } });
   };
 
   return (
@@ -39,17 +29,17 @@ const HistoryPage = () => {
           <h2>Recent Predictions</h2>
           <div className="history-list">
             {historyItems.map((item) => (
-              <div
-                key={item.id}
-                className="history-item"
-                onClick={() => handleItemClick(item.id)}
-              >
+              <div 
+              key={item.id} 
+              className="history-item" 
+              onClick={() => handleItemClick(item)}>
+
                 <p className="history-date">{item.date}</p>
                 <p className="history-details">
                   {item.propertyType} - Postcode: {item.postCode}
                 </p>
                 <p className="history-prediction">
-                  Predicted Price: ${item.predictedPrice.toLocaleString()}
+                  Predicted Price: ${item.price.toLocaleString()}
                 </p>
                 <ChevronRight className="history-arrow" size={20} />
               </div>

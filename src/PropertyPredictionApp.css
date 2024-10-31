@@ -497,3 +497,19 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Download button for predictiondetails page */
+.download-button {
+  padding: 10px 15px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.download-button:hover {
+  background-color: #1e4bb8;
+}

@@ -1,29 +1,8 @@
 import React, { useState } from 'react';
 import { Home, MapPin, DollarSign } from 'lucide-react';
-import { Line, Scatter, Bar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import Plot from 'react-plotly.js'
 import './PropertyPredictionApp.css';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const PropertyPredictionApp = () => {
   const [propertyType, setPropertyType] = useState('');
@@ -37,25 +16,6 @@ const PropertyPredictionApp = () => {
   const isValidPostcode = (code) => {
     const numericCode = parseInt(code, 10);
     return !isNaN(numericCode) && numericCode >= 2000 && numericCode <= 2999;
-  };
-
-
-  const generateMockData = () => {
-    const years = ['2018', '2019', '2020', '2021', '2022', '2023'];
-    const prices = years.map(() => Math.floor(Math.random() * 500000) + 500000);
-    
-    const clusters = Array.from({ length: 20 }, () => ({
-      x: Math.random() * 10,
-      y: Math.random() * 10,
-    }));
-    
-    const averagePrices = {
-      'Your Property': Math.floor(Math.random() * 300000) + 700000,
-      'Neighborhood Avg': Math.floor(Math.random() * 200000) + 800000,
-      'City Avg': Math.floor(Math.random() * 100000) + 900000,
-    };
-
-    return { years, prices, clusters, averagePrices };
   };
 
   const handleSubmit = async (e) => {
@@ -99,6 +59,75 @@ const PropertyPredictionApp = () => {
         price: data.predicted_price,
         weeklyRent: data.predicted_rent,
       });
+
+      const newPrediction = {
+        id: Date.now().toString(), // unique identifier
+        date: new Date().toLocaleDateString(),
+        propertyType,
+        postCode,
+        area,
+        price: data.predicted_price,
+        weeklyRent: data.predicted_rent,
+      };
+  
+      const history = JSON.parse(localStorage.getItem('predictionsHistory')) || [];
+      localStorage.setItem('predictionsHistory', JSON.stringify([newPrediction, ...history]));
+      
+      setPrediction(newPrediction);
+
+      setCharts({
+        lineChart: {
+          data: [
+            {
+              x: data.price_trend?.years || [],
+              y: data.price_trend?.prices || [],
+              type: 'scatter',
+              mode: 'lines+markers',
+              marker: { color: '#2563eb' },
+              name: 'Price Trend',
+            },
+          ],
+          layout: { title: 'Property Price Trend', xaxis: { title: 'Year' }, yaxis: { title: 'Price' } },
+        },
+        scatterChart: {
+          data: [
+            {
+              x: data.rental_clusters?.x || [],
+              y: data.rental_clusters?.y || [],
+              mode: 'markers',
+              marker: { size: 12, color: 'rgba(75, 192, 192, 0.6)' },
+              name: 'Rental Clusters',
+            },
+            {
+              x: [data.current_property?.x || 0],
+              y: [data.current_property?.y || 0],
+              mode: 'markers',
+              marker: { size: 12, color: 'red' },
+              name: 'Your Property',
+            },
+          ],
+          layout: { title: 'Rental Cluster Analysis', xaxis: { title: 'X' }, yaxis: { title: 'Y' } },
+        },
+        barChart: {
+          data: [
+            {
+              x: ['Your Property', 'Neighborhood Avg', 'City Avg'],
+              y: [
+                data.predicted_price,
+                data.neighborhood_avg,
+                data.city_avg 
+              ],
+              type: 'bar',
+              marker: { color: ['#2563eb', '#60a5fa', '#93c5fd'] },
+              name: 'Price Comparison',
+            },
+          ],
+          layout: { title: 'Price Comparison', xaxis: { title: 'Category' }, yaxis: { title: 'Price' } },
+        },
+    });
+  
+
+
   
     } catch (error) {
       setError(error.message);
@@ -106,19 +135,6 @@ const PropertyPredictionApp = () => {
   };
   
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Chart Title',
-      },
-    },
-  };
 
   return (
     <div className="app-container">
@@ -203,21 +219,27 @@ const PropertyPredictionApp = () => {
         <div className="charts-container">
           <div className="chart-wrapper">
             <h2 className="chart-title">Property Price Trend</h2>
-            <div className="chart-container">
-              <Line data={charts.lineChart} options={chartOptions} />
-            </div>
+            <Plot
+              data={charts.lineChart.data}
+              layout={charts.lineChart.layout}
+              className="chart-container"
+            />
           </div>
           <div className="chart-wrapper">
             <h2 className="chart-title">Rental Cluster Analysis</h2>
-            <div className="chart-container">
-              <Scatter data={charts.scatterChart} options={chartOptions} />
-            </div>
+              <Plot
+                data={charts.scatterChart.data}
+                layout={charts.scatterChart.layout}
+                className="chart-container"
+              />
           </div>
           <div className="chart-wrapper">
             <h2 className="chart-title">Price Comparison</h2>
-            <div className="chart-container">
-              <Bar data={charts.barChart} options={chartOptions} />
-            </div>
+              <Plot
+                data={charts.barChart.data}
+                layout={charts.barChart.layout}
+                className="chart-container"
+              />
           </div>
         </div>
       )}
