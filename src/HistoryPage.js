@@ -5,26 +5,21 @@ import { Clock, ChevronRight } from 'lucide-react';
 const HistoryPage = () => {
   const navigate = useNavigate();
 
-  // Mock history data - in a real app, this would come from your backend
-  const historyItems = [
-    {
-      id: '1',
-      date: 'October 31, 2024',
-      propertyType: 'House',
-      postCode: '2000',
-      predictedPrice: 850000
-    },
-    {
-      id: '2',
-      date: 'October 30, 2024',
-      propertyType: 'Unit',
-      postCode: '2010',
-      predictedPrice: 650000
-    }
-  ];
+  const [historyItems, setHistoryItems] = React.useState([]);
 
-  const handleItemClick = (id) => {
-    navigate(`/prediction/${id}`);
+  React.useEffect(() => {
+    const history = JSON.parse(localStorage.getItem('predictionsHistory')) || [];
+    const sortedHistory = history.sort((a, b) => b.id - a.id);
+    setHistoryItems(sortedHistory);
+  }, []);
+
+  const handleItemClick = (item) => {
+    navigate(`/prediction/${item.id}`, { state: { prediction: item } });
+  };
+  
+  const handleDeleteAll = () => {
+    localStorage.removeItem('predictionsHistory');
+    setHistoryItems([]); // Clear the history items state
   };
 
   return (
@@ -33,28 +28,36 @@ const HistoryPage = () => {
         <Clock size={32} className="history-icon" />
         <h1>Prediction History</h1>
       </div>
-      
       <div className="history-content">
         <div className="history-card">
           <h2>Recent Predictions</h2>
+          
           <div className="history-list">
-            {historyItems.map((item) => (
-              <div
-                key={item.id}
-                className="history-item"
-                onClick={() => handleItemClick(item.id)}
-              >
-                <p className="history-date">{item.date}</p>
-                <p className="history-details">
-                  {item.propertyType} - Postcode: {item.postCode}
-                </p>
-                <p className="history-prediction">
-                  Predicted Price: ${item.predictedPrice.toLocaleString()}
-                </p>
-                <ChevronRight className="history-arrow" size={20} />
-              </div>
-            ))}
+            {historyItems.length > 0 ? (
+              historyItems.map((item) => (
+                <div 
+                  key={item.id} 
+                  className="history-item" 
+                  onClick={() => handleItemClick(item)}>
+
+                  <p className="history-date">{item.date}</p>
+                  <p className="history-details">
+                    {item.propertyType} - Postcode: {item.postCode}
+                  </p>
+                  <p className="history-prediction">
+                    Predicted Price: ${item.price.toLocaleString()}
+                  </p>
+                  <ChevronRight className="history-arrow" size={20} />
+                  
+                </div>
+              ))
+            ) : (
+              <p>No prediction history available.</p>
+            )}
           </div>
+          <button onClick={handleDeleteAll} className="delete-button">
+                  Delete All
+                  </button>
         </div>
       </div>
     </div>

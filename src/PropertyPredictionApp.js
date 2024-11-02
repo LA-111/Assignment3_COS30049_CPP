@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Home, MapPin, DollarSign } from 'lucide-react';
 import { Line, Scatter, Bar } from 'react-chartjs-2';
+import { useNavigate } from 'react-router-dom';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +13,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import Plot from 'react-plotly.js';
 import './PropertyPredictionApp.css';
 
 ChartJS.register(
@@ -44,24 +46,32 @@ const PropertyPredictionApp = () => {
       console.log("Trend Data:", data);
 
       if (data?.trend_data?.house_trend && data?.trend_data?.unit_trend) {
-        const chartData = {
-          labels: data.trend_data.house_trend.map(item => item.year_month),
-          datasets: [
+        const lineChartData = {
+          data: [
             {
-              label: 'Average Purchase Price - House',
-              data: data.trend_data.house_trend.map(item => item.purchase_price),
-              borderColor: 'rgb(75, 192, 192)',
-              tension: 0.1,
+              x: data.trend_data.house_trend.map(item => item.year_month),
+              y: data.trend_data.house_trend.map(item => item.purchase_price),
+              type: 'scatter',
+              mode: 'lines+markers',
+              name: 'Average Purchase Price - House',
+              line: { color: 'rgb(75, 192, 192)' },
             },
             {
-              label: 'Average Purchase Price - Unit',
-              data: data.trend_data.unit_trend.map(item => item.purchase_price),
-              borderColor: 'rgb(153, 102, 255)',
-              tension: 0.1,
+              x: data.trend_data.unit_trend.map(item => item.year_month),
+              y: data.trend_data.unit_trend.map(item => item.purchase_price),
+              type: 'scatter',
+              mode: 'lines+markers',
+              name: 'Average Purchase Price - Unit',
+              line: { color: 'rgb(153, 102, 255)' },
             },
           ],
+          layout: {
+            title: 'Property Price Trend',
+            xaxis: { title: 'Year-Month' },
+            yaxis: { title: 'Average Purchase Price' },
+          },
         };
-        setCharts(prevState => ({ ...prevState, lineChart: chartData }));
+        setCharts(prevState => ({ ...prevState, lineChart: lineChartData }));
       } else {
         console.error("Error: Missing trend data for house or unit.");
       }
@@ -76,17 +86,26 @@ const PropertyPredictionApp = () => {
       const data = await response.json();
       console.log("Comparison Data:", data);
 
-      const chartData = {
-        labels: data.comparison_data.map(item => item.property_type),
-        datasets: [
+      const barChartData = {
+        data: [
           {
-            label: 'Average Purchase Price by Property Type',
-            data: data.comparison_data.map(item => item.purchase_price),
-            backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)'],
+            x: data.comparison_data.map(item => item.property_type),
+            y: data.comparison_data.map(item => item.purchase_price),
+            type: 'bar',
+            name: 'Average Purchase Price by Property Type',
+            marker: {
+              color: ['rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)'],
+            },
           },
         ],
+        layout: {
+          title: 'Price Comparison by Property Type',
+          xaxis: { title: 'Property Type' },
+          yaxis: { title: 'Average Purchase Price' },
+        },
       };
-      setCharts(prevState => ({ ...prevState, barChart: chartData }));
+      
+      setCharts(prevState => ({ ...prevState, barChart: barChartData }));
     } catch (error) {
       console.error("Error fetching comparison data:", error);
     }
@@ -98,16 +117,38 @@ const PropertyPredictionApp = () => {
       const data = await response.json();
       console.log("Size vs Price Data:", data);
 
-      const chartData = {
-        datasets: [
+      const scatterChartData = {
+        data: [
           {
-            label: 'Size vs. Price',
-            data: data.size_price_data.map(item => ({ x: item.area, y: item.purchase_price })),
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            x: data.size_price_data.map(item => item.area),
+            y: data.size_price_data.map(item => item.purchase_price),
+            type: 'scatter',
+            mode: 'markers',
+            name: 'Size vs. Price',
+            marker: {
+              color: 'rgba(255, 99, 132, 0.6)',
+              size: 8, // Adjust size to make points more readable
+            },
           },
         ],
+        layout: {
+          title: `Size vs Price in Postcode ${postCode}`,
+          xaxis: {
+            title: 'Area (sqm)',
+            tickformat: ',.0f', // Format for thousands without decimals
+          },
+          yaxis: {
+            title: 'Purchase Price',
+            tickformat: '$,', // Format as currency with commas for readability
+            automargin: true, // Automatically adjusts the margin based on label size
+          },
+          margin: { l: 80, r: 30, t: 70, b: 50 }, // Increase left margin to accommodate y-axis labels
+          hovermode: 'closest', // Enhance interactivity with tooltips on hover
+        },
       };
-      setCharts(prevState => ({ ...prevState, scatterChart: chartData }));
+            
+      
+      setCharts(prevState => ({ ...prevState, scatterChart: scatterChartData }));
     } catch (error) {
       console.error("Error fetching size vs price data:", error);
     }
@@ -137,7 +178,25 @@ const PropertyPredictionApp = () => {
       if (!response.ok) throw new Error('Failed to fetch prediction.');
 
       const data = await response.json();
-      setPrediction({ price: data.predicted_price, weeklyRent: data.predicted_rent });
+
+      const newPrediction = {
+        id: Date.now().toString(), // unique identifier
+        date: new Date().toLocaleDateString(),
+        propertyType,
+        postCode,
+        area,
+        price: data.predicted_price,
+        weeklyRent: data.predicted_rent,
+        priceHistory: data.trend_data?.house_trend, 
+        areaComparison: data.comparison_data, 
+        sizeComparison: data.size_price_data, 
+      };
+  
+      const history = JSON.parse(localStorage.getItem('predictionsHistory')) || [];
+      localStorage.setItem('predictionsHistory', JSON.stringify([newPrediction, ...history]));
+
+      
+      setPrediction(newPrediction);
 
       // Fetch charts data after prediction request is successful
       fetchTrendData();
@@ -219,20 +278,23 @@ const PropertyPredictionApp = () => {
       <div className="charts-container">
         {charts.lineChart && (
           <div className="chart-wrapper">
-            <h2 className="chart-title">Property Price Trend</h2>
-            <Line data={charts.lineChart} options={{ responsive: true }} />
+            <Plot
+                data={charts.lineChart.data}
+                layout={charts.lineChart.layout}
+                useResizeHandler={true}
+                style={{ width: '100%', height: '100%' }}
+              />
+
           </div>
         )}
         {charts.scatterChart && (
           <div className="chart-wrapper">
-            <h2 className="chart-title">Size vs Price in Postcode {postCode}</h2>
-            <Scatter data={charts.scatterChart} options={{ responsive: true }} />
+            <Plot data={charts.scatterChart.data} layout={charts.scatterChart.layout} />
           </div>
         )}
         {charts.barChart && (
           <div className="chart-wrapper">
-            <h2 className="chart-title">Price Comparison by Property Type</h2>
-            <Bar data={charts.barChart} options={{ responsive: true }} />
+            <Plot data={charts.barChart.data} layout={charts.barChart.layout} />
           </div>
         )}
       </div>

@@ -236,18 +236,18 @@ body {
     font-weight: bold;
   }
   
-  .charts-container {
+  .chart-wrapper {
     display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    justify-content: center;
+    align-items: center;
   }
   
-  .chart-wrapper {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  .chart-container {
+    width: 90%;
+    max-width: 1200px; 
+    height: 400px;
   }
+  
   
   .chart-title {
     font-size: 1.25rem;
@@ -497,3 +497,41 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Download button for predictiondetails page */
+.download-button {
+  padding: 10px 15px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.download-button:hover {
+  background-color: #1e4bb8;
+}
+
+.history-content {
+  position: relative; 
+}
+
+.delete-button {
+  margin-top: 10px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #ff1a1a; 
+}
+
