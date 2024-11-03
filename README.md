@@ -1,70 +1,131 @@
-# Getting Started with Create React App
+<br />
+<div align="center">
+  <a href="https://github.com/github_username/repo_name">
+    <img src="src/house.png" alt="Logo" width="40" height="40">
+  </a>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h3 align="center">Property Prediction Machine Learning App</h3>
 
-## Available Scripts
+  <p align="center">
+    Website that makes use of our previously designed machine learning model to accurately make predictions of a houses price, based on postcode and area. 
+    Created for Assignment 3, COS30049 - Group 28 ChilliPrawnPizza
+    <br />
+  </p>
+</div>
 
-In the project directory, you can run:
 
-### `npm start`
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#contributors">Contributors</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Getting Started 
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+Below shows the installation process of all the necessary packages in order to run our application.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* FastAPI
+```bash
+pip install fastapi
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* Uvicorn
+```bash
+pip install uvicorn
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* Lucide
+```bash
+pip install lucide-react
+```
 
-### `npm run eject`
+* Plotly
+```bash
+pip install plotly
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* Html2Canvas
+```sh
+npm install html2canvas
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* JsPDF
+```sh
+npm install jspdf --save
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* React Router Dom
+```
+npm install react-router-dom
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Learn More
+## Installation
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Cloning the repository:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```sh
+git clone https://github.com/LA-111/Assignment3_COS30049_CPP
+```
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Code Splitting
+## Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This section covers how to run the app locally and start predicting!
 
-### Analyzing the Bundle Size
+1. cd to the location of where the project is installed
+```
+cd C:\Users\[yourlocation]\Assignment3_COS30049_CPP\
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. Start the project using React
+```bash
+npm start
+```
+This will host the app locally on http://localhost:3000. This is where you can access the website. Before you can access the backend you need to start uvicorn!
 
-### Making a Progressive Web App
+3. cd to src folder
+```bash
+cd src
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+4. Reload the app using uvicorn
+```bash
+uvicorn app:app --reload
+```
+5. From this point the website should be ready, with functionality from the back end! Simply put an input into the postcode (ensuring it is a valid NSW postcode) and a size (measured in square metres) and the machine learning model should predict the price/weekly rent!
 
-### Advanced Configuration
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Contributors
 
-### Deployment
+Adnan Shamsul:  https://github.com/adnanxc
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Jeremy Allan:  https://github.com/Jeremy-Allan
 
-### `npm run build` fails to minify
+Lucas Annou: https://github.com/LA-111
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contact
+
+Email us: info@proppredict.com
+
+Call us: (02) 1234 5678
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
