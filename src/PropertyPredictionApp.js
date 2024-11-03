@@ -138,7 +138,7 @@ const PropertyPredictionApp = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error('Failed to fetch prediction.');
+      if (!response.ok) throw new Error('Invalid postcode. Please enter a different postcode.');
 
       const data = await response.json();
 
