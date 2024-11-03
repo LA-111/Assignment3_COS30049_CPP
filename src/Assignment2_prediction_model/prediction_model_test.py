@@ -18,17 +18,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-merged_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\merged_df.joblib')
-house_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\house_df.joblib')
-unit_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\unit_df.joblib')
+import os
 
-rf_house = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\rf_house_model.joblib')
-rf_unit = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\rf_unit_model.joblib')
-classification_scaler = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\classification_scaler_house.joblib')
+# Define the model directory path
+MODEL_DIR = os.path.join(os.path.dirname(__file__), 'ml_model')
 
-best_rf_model_house = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\house_price_model.joblib')
-best_rf_model_unit = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\unit_price_model.joblib')
-scaler = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\scaler.joblib')
+# Load the models using os.path.join
+merged_df = joblib.load(os.path.join(MODEL_DIR, 'merged_df.joblib'))
+house_df = joblib.load(os.path.join(MODEL_DIR, 'house_df.joblib'))
+unit_df = joblib.load(os.path.join(MODEL_DIR, 'unit_df.joblib'))
+
+rf_house = joblib.load(os.path.join(MODEL_DIR, 'rf_house_model.joblib'))
+rf_unit = joblib.load(os.path.join(MODEL_DIR, 'rf_unit_model.joblib'))
+classification_scaler = joblib.load(os.path.join(MODEL_DIR, 'classification_scaler_house.joblib'))
+
+best_rf_model_house = joblib.load(os.path.join(MODEL_DIR, 'house_price_model.joblib'))
+best_rf_model_unit = joblib.load(os.path.join(MODEL_DIR, 'unit_price_model.joblib'))
+scaler = joblib.load(os.path.join(MODEL_DIR, 'scaler.joblib'))
 
 
 def classify_and_get_rent(property_type, size_category_encoded, council_name_encoded):
