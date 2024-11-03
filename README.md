@@ -1,131 +1,60 @@
-<br />
-<div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="src/house.png" alt="Logo" width="40" height="40">
-  </a>
+NSW PROPPREDICT (property predictor)
+A website interface that uses our machine learning model to predict property prices accurately based on postcode and area. Created for Assignment 3, COS30049 - Group 28 ChilliPrawnPizza.
 
-<h3 align="center">Property Prediction Machine Learning App</h3>
+PREQUISTES:
+Below are the necessary packages to run the application.
 
-  <p align="center">
-    Website that makes use of our previously designed machine learning model to accurately make predictions of a houses price, based on postcode and area. 
-    Created for Assignment 3, COS30049 - Group 28 ChilliPrawnPizza
-    <br />
-  </p>
-</div>
+  FastAPI
+  pip install fastapi
 
+  Uvicorn
+  pip install uvicorn
 
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#contributors">Contributors</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
+  Lucide
+  pip install lucide-react
 
+  Plotly
+  pip install plotly
 
-# Getting Started 
+  Html2Canvas
+  npm install html2canvas
 
+  JsPDF
+  npm install jspdf --save
 
-### Prerequisites
+  React Router Dom
+  npm install react-router-dom
 
-Below shows the installation process of all the necessary packages in order to run our application.
+INSTALLATION:
+  Clone the repository:
+  git clone https://github.com/LA-111/Assignment3_COS30049_CPP
 
-* FastAPI
-```bash
-pip install fastapi
-```
+USAGE:
+Instructions on how to run the app locally and start predicting.
 
-* Uvicorn
-```bash
-pip install uvicorn
-```
+  In a terminal, navigate to the project location:
+  cd C:\Users\[yourlocation]\Assignment3_COS30049_CPP\
 
-* Lucide
-```bash
-pip install lucide-react
-```
+  Start the project with React:
+  npm start
 
-* Plotly
-```bash
-pip install plotly
-```
+  This will host the app locally on http://localhost:3000. Before accessing the backend, start Uvicorn.
 
-* Html2Canvas
-```sh
-npm install html2canvas
-```
+  In a new (second) terminal, navigate to the src folder:
+  cd src
 
-* JsPDF
-```sh
-npm install jspdf --save
-```
+  Reload the back-end server using Uvicorn:
+  uvicorn app:app --reload
 
-* React Router Dom
-```
-npm install react-router-dom
-```
+The website should now be ready with full functionality. Enter a valid NSW postcode and a size (in square meters) to predict the price/weekly rent.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+CONTRIBUTORS:
+  Adnan Shamsul:  https://github.com/adnanxc
 
-## Installation
+  Jeremy Allan:  https://github.com/Jeremy-Allan
 
-Cloning the repository:
+  Lucas Annou: https://github.com/LA-111
 
-```sh
-git clone https://github.com/LA-111/Assignment3_COS30049_CPP
-```
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Usage
-
-This section covers how to run the app locally and start predicting!
-
-1. cd to the location of where the project is installed
-```
-cd C:\Users\[yourlocation]\Assignment3_COS30049_CPP\
-```
-
-2. Start the project using React
-```bash
-npm start
-```
-This will host the app locally on http://localhost:3000. This is where you can access the website. Before you can access the backend you need to start uvicorn!
-
-3. cd to src folder
-```bash
-cd src
-```
-
-4. Reload the app using uvicorn
-```bash
-uvicorn app:app --reload
-```
-5. From this point the website should be ready, with functionality from the back end! Simply put an input into the postcode (ensuring it is a valid NSW postcode) and a size (measured in square metres) and the machine learning model should predict the price/weekly rent!
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Contributors
-
-Adnan Shamsul:  https://github.com/adnanxc
-
-Jeremy Allan:  https://github.com/Jeremy-Allan
-
-Lucas Annou: https://github.com/LA-111
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Contact
-
-Email us: info@proppredict.com
-
-Call us: (02) 1234 5678
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+CONTACT:
+  Email: 104565600@student.swin.edu.au
+  Phone: (04) 1234 5678
