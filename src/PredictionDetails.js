@@ -65,23 +65,23 @@ const PredictionDetail = () => {
         </div>
 
         <div className="prediction-detail-content">
-          <div className="detail-card main-details">
-            <div className="detail-item">
-              <Home size={20} />
-              <span className="detail-label">Property Type:</span>
-              <span className="detail-value">{predictionData.propertyType}</span>
-            </div>
-            <div className="detail-item">
-              <MapPin size={20} />
-              <span className="detail-label">Post Code:</span>
-              <span className="detail-value">{predictionData.postCode}</span>
-            </div>
-            <div className="detail-item">
-              <Home size={20} />
-              <span className="detail-label">Property Type:</span>
-              <span className="detail-value">{capitalizePropertyType(predictionData.propertyType)}</span>
-            </div>
-          </div>
+  <div className="detail-card main-details">
+    <div className="detail-item">
+      <Home size={20} />
+      <span className="detail-label">Property Type:</span>
+      <span className="detail-value">{capitalizePropertyType(predictionData.propertyType)}</span>
+    </div>
+    <div className="detail-item">
+      <MapPin size={20} />
+      <span className="detail-label">Post Code:</span>
+      <span className="detail-value">{predictionData.postCode}</span>
+    </div>
+    <div className="detail-item">
+      <DollarSign size={20} />
+      <span className="detail-label">Predicted Price:</span>
+      <span className="detail-value">${predictionData.price.toLocaleString()}</span>
+    </div>
+  </div>
 
           <div className="charts-grid">
             <div className="detail-card chart-card">
