@@ -18,17 +18,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-merged_df = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\merged_df.joblib')
-house_df = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\house_df.joblib')
-unit_df = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\unit_df.joblib')
+merged_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\merged_df.joblib')
+house_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\house_df.joblib')
+unit_df = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\unit_df.joblib')
 
-rf_house = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\rf_house_model.joblib')
-rf_unit = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\rf_unit_model.joblib')
-classification_scaler = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\classification_scaler_house.joblib')
+rf_house = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\rf_house_model.joblib')
+rf_unit = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\rf_unit_model.joblib')
+classification_scaler = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\classification_scaler_house.joblib')
 
-best_rf_model_house = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\house_price_model.joblib')
-best_rf_model_unit = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\unit_price_model.joblib')
-scaler = joblib.load(r'C:\Users\AdnanShamsul\Downloads\Swinburne\Assignment3_COS30049_CPP\src\Assignment2_prediction_model\scaler.joblib')
+best_rf_model_house = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\house_price_model.joblib')
+best_rf_model_unit = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\unit_price_model.joblib')
+scaler = joblib.load(r'C:\Users\jerem\OneDrive\Documents\GitHub\Assignment 2 prediction model\scaler.joblib')
 
 
 def classify_and_get_rent(property_type, size_category_encoded, council_name_encoded):

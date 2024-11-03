@@ -5,6 +5,10 @@ import Plot from 'react-plotly.js';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
+const capitalizePropertyType = (type) => {
+  return type.charAt(0).toUpperCase() + type.slice(1);
+};
+
 const PredictionDetail = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -73,9 +77,9 @@ const PredictionDetail = () => {
               <span className="detail-value">{predictionData.postCode}</span>
             </div>
             <div className="detail-item">
-              <DollarSign size={20} />
-              <span className="detail-label">Predicted Price:</span>
-              <span className="detail-value">${predictionData.price.toLocaleString()}</span>
+              <Home size={20} />
+              <span className="detail-label">Property Type:</span>
+              <span className="detail-value">{capitalizePropertyType(predictionData.propertyType)}</span>
             </div>
           </div>
 

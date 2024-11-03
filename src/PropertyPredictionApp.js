@@ -224,7 +224,7 @@ const PropertyPredictionApp = () => {
             Post Code:
           </label>
           <input
-            type="text"
+            type="number"
             value={postCode}
             onChange={(e) => setPostCode(e.target.value)}
             className="form-input"

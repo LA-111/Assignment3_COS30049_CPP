@@ -4,7 +4,6 @@ import { Clock, ChevronRight } from 'lucide-react';
 
 const HistoryPage = () => {
   const navigate = useNavigate();
-
   const [historyItems, setHistoryItems] = React.useState([]);
 
   React.useEffect(() => {
@@ -19,7 +18,12 @@ const HistoryPage = () => {
   
   const handleDeleteAll = () => {
     localStorage.removeItem('predictionsHistory');
-    setHistoryItems([]); // Clear the history items state
+    setHistoryItems([]);
+  };
+
+  // Helper function to capitalize property type
+  const capitalizePropertyType = (type) => {
+    return type.charAt(0).toUpperCase() + type.slice(1);
   };
 
   return (
@@ -42,7 +46,7 @@ const HistoryPage = () => {
 
                   <p className="history-date">{item.date}</p>
                   <p className="history-details">
-                    {item.propertyType} - Postcode: {item.postCode}
+                    {capitalizePropertyType(item.propertyType)} - Postcode: {item.postCode}
                   </p>
                   <p className="history-prediction">
                     Predicted Price: ${item.price.toLocaleString()}
@@ -56,8 +60,8 @@ const HistoryPage = () => {
             )}
           </div>
           <button onClick={handleDeleteAll} className="delete-button">
-                  Delete All
-                  </button>
+            Delete All
+          </button>
         </div>
       </div>
     </div>
