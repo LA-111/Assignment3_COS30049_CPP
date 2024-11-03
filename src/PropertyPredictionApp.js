@@ -186,6 +186,10 @@ const PropertyPredictionApp = () => {
         labels: charts.barChart?.data[0]?.x || [],
         data: charts.barChart?.data[0]?.y || [],
       },
+      sizeComparison: {
+        labels: charts.scatterChart?.data[0]?.x || [], // Make sure `x` corresponds to area (sqm)
+        data: charts.scatterChart?.data[0]?.y || [],   // `y` should correspond to price
+      },
     };
 
     const history = JSON.parse(localStorage.getItem('predictionsHistory')) || [];

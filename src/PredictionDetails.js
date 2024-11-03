@@ -99,18 +99,19 @@ const PredictionDetail = () => {
             </div>
 
             <div className="detail-card chart-card">
-              <h2>Area Comparison</h2>
+              <h2>Size vs Price</h2>
               <Plot
                 data={[
                   {
-                    x: predictionData.areaComparison?.labels || [], // Use areaComparison labels
-                    y: predictionData.areaComparison?.data || [],   // Use areaComparison data
-                    type: 'bar',
-                    marker: { color: ['#2563eb', '#60a5fa', '#93c5fd'] },
-                    name: 'Price Comparison',
+                    x: predictionData.sizeComparison?.labels || [], // Use sizeComparison labels (area sizes)
+                    y: predictionData.sizeComparison?.data || [],   // Use sizeComparison data (prices)
+                    type: 'scatter',
+                    mode: 'markers',
+                    marker: { color: '#ff6384', size: 8 },          // Style for size vs price points
+                    name: 'Size vs Price',
                   },
                 ]}
-                layout={{ title: 'Area Comparison', xaxis: { title: 'Comparison' }, yaxis: { title: 'Price' } }}
+                layout={{ title: 'Size vs Price', xaxis: { title: 'Area (sqm)' }, yaxis: { title: 'Price' } }}
                 className="chart-container"
               />
             </div>
