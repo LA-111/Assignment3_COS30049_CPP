@@ -1,31 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Home, MapPin, DollarSign } from 'lucide-react';
-import { Line, Scatter, Bar } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 import Plot from 'react-plotly.js';
 import './PropertyPredictionApp.css';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const PropertyPredictionApp = () => {
   const [propertyType, setPropertyType] = useState('');
@@ -37,13 +14,13 @@ const PropertyPredictionApp = () => {
     barChart: null,
     scatterChart: null,
   });
+  const [dataFetched, setDataFetched] = useState(false); // New state to track data fetch completion
   const [error, setError] = useState(null);
 
   const fetchTrendData = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/property_price_trend");
       const data = await response.json();
-      console.log("Trend Data:", data);
 
       if (data?.trend_data?.house_trend && data?.trend_data?.unit_trend) {
         const lineChartData = {
@@ -72,8 +49,6 @@ const PropertyPredictionApp = () => {
           },
         };
         setCharts(prevState => ({ ...prevState, lineChart: lineChartData }));
-      } else {
-        console.error("Error: Missing trend data for house or unit.");
       }
     } catch (error) {
       console.error("Error fetching trend data:", error);
@@ -84,7 +59,6 @@ const PropertyPredictionApp = () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/price_comparison");
       const data = await response.json();
-      console.log("Comparison Data:", data);
 
       const barChartData = {
         data: [
@@ -115,7 +89,6 @@ const PropertyPredictionApp = () => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/size_vs_price/${postCode}`);
       const data = await response.json();
-      console.log("Size vs Price Data:", data);
 
       const scatterChartData = {
         data: [
@@ -127,26 +100,16 @@ const PropertyPredictionApp = () => {
             name: 'Size vs. Price',
             marker: {
               color: 'rgba(255, 99, 132, 0.6)',
-              size: 8, // Adjust size to make points more readable
+              size: 8,
             },
           },
         ],
         layout: {
           title: `Size vs Price in Postcode ${postCode}`,
-          xaxis: {
-            title: 'Area (sqm)',
-            tickformat: ',.0f', // Format for thousands without decimals
-          },
-          yaxis: {
-            title: 'Purchase Price',
-            tickformat: '$,', // Format as currency with commas for readability
-            automargin: true, // Automatically adjusts the margin based on label size
-          },
-          margin: { l: 80, r: 30, t: 70, b: 50 }, // Increase left margin to accommodate y-axis labels
-          hovermode: 'closest', // Enhance interactivity with tooltips on hover
+          xaxis: { title: 'Area (sqm)' },
+          yaxis: { title: 'Purchase Price' },
         },
       };
-            
       
       setCharts(prevState => ({ ...prevState, scatterChart: scatterChartData }));
     } catch (error) {
@@ -180,32 +143,56 @@ const PropertyPredictionApp = () => {
       const data = await response.json();
 
       const newPrediction = {
-        id: Date.now().toString(), // unique identifier
+        id: Date.now().toString(),
         date: new Date().toLocaleDateString(),
         propertyType,
         postCode,
         area,
         price: data.predicted_price,
         weeklyRent: data.predicted_rent,
-        priceHistory: data.trend_data?.house_trend, 
-        areaComparison: data.comparison_data, 
-        sizeComparison: data.size_price_data, 
       };
   
-      const history = JSON.parse(localStorage.getItem('predictionsHistory')) || [];
-      localStorage.setItem('predictionsHistory', JSON.stringify([newPrediction, ...history]));
-
-      
       setPrediction(newPrediction);
 
-      // Fetch charts data after prediction request is successful
-      fetchTrendData();
-      fetchComparisonData();
-      fetchSizeVsPriceData();
+      // Fetch chart data and then set dataFetched to true once done
+      await Promise.all([fetchTrendData(), fetchComparisonData(), fetchSizeVsPriceData()]);
+      setDataFetched(true);  // Signal that data fetching is complete
     } catch (error) {
       setError(error.message);
     }
   };
+
+  useEffect(() => {
+    if (dataFetched && prediction) {
+      savePredictionToHistory(prediction);  // Save to history once dataFetched is true
+      setDataFetched(false);  // Reset for future predictions
+    }
+  }, [dataFetched, prediction]);
+
+  const savePredictionToHistory = (newPrediction) => {
+    const predictionData = {
+      id: new Date().getTime(),
+      date: new Date().toLocaleString(),
+      propertyType: newPrediction.propertyType,
+      postCode: newPrediction.postCode,
+      area: newPrediction.area,
+      price: newPrediction.price,
+      weeklyRent: newPrediction.weeklyRent,
+      priceHistory: {
+        labels: charts.lineChart?.data[0]?.x || [],
+        data: charts.lineChart?.data[0]?.y || [],
+      },
+      areaComparison: {
+        labels: charts.barChart?.data[0]?.x || [],
+        data: charts.barChart?.data[0]?.y || [],
+      },
+    };
+
+    const history = JSON.parse(localStorage.getItem('predictionsHistory')) || [];
+    history.push(predictionData);
+    localStorage.setItem('predictionsHistory', JSON.stringify(history));
+  };
+
 
   return (
     <div className="app-container">
@@ -215,7 +202,7 @@ const PropertyPredictionApp = () => {
           Property Price Predictor
         </span>
       </h1>
-      
+
       <form onSubmit={handleSubmit} className="form-container">
         <div className="form-group">
           <label className="form-label">Property Type:</label>
@@ -230,7 +217,7 @@ const PropertyPredictionApp = () => {
             <option value="unit">Unit</option>
           </select>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label flex items-center">
             <MapPin className="mr-2" size={18} />
@@ -244,7 +231,7 @@ const PropertyPredictionApp = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">Area (sqm):</label>
           <input
@@ -255,12 +242,12 @@ const PropertyPredictionApp = () => {
             required
           />
         </div>
-        
+
         <button type="submit" className="submit-button">Predict Price</button>
       </form>
 
       {error && <div className="error-message">{error}</div>}
-      
+
       {prediction && (
         <div className="prediction-results">
           <h2 className="prediction-title">Prediction Results</h2>
@@ -279,11 +266,11 @@ const PropertyPredictionApp = () => {
         {charts.lineChart && (
           <div className="chart-wrapper">
             <Plot
-                data={charts.lineChart.data}
-                layout={charts.lineChart.layout}
-                useResizeHandler={true}
-                style={{ width: '100%', height: '100%' }}
-              />
+              data={charts.lineChart.data}
+              layout={charts.lineChart.layout}
+              useResizeHandler={true}
+              style={{ width: '100%', height: '100%' }}
+            />
 
           </div>
         )}
